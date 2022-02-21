@@ -1,0 +1,43 @@
+--- /dev/null	2022-01-02 01:51:56.394499824 +0000
++++ ./Makefile-libbz2_dll	2022-01-02 17:45:40.005996405 +0000
+@@ -0,0 +1,40 @@
++
++# This Makefile builds a shared version of the library, 
++# libbz2.dll, using MinGW
++
++# ------------------------------------------------------------------
++# This file is part of bzip2/libbzip2, a program and library for
++# lossless, block-sorting data compression.
++#
++# bzip2/libbzip2 version 1.0.8 of 13 July 2019
++# Copyright (C) 1996-2019 Julian Seward <jseward@acm.org>
++#
++# Please read the WARNING, DISCLAIMER and PATENTS sections in the 
++# README file.
++#
++# This program is released under the terms of the license contained
++# in the file LICENSE.
++# ------------------------------------------------------------------
++
++
++SHELL=/bin/sh
++CC=gcc
++BIGFILES=-D_FILE_OFFSET_BITS=64
++CFLAGS+=-fpic -fPIC -Wall -Winline $(BIGFILES) $(CPPFLAGS)
++
++OBJS= blocksort.o  \
++      huffman.o    \
++      crctable.o   \
++      randtable.o  \
++      compress.o   \
++      decompress.o \
++      bzlib.o
++
++all: $(OBJS)
++	$(CC) $(LDFLAGS) -shared -s -Wl,--subsystem,console,--out-implib,libbz2.dll.a -o libbz2-1.dll $(OBJS)
++
++clean: 
++	rm -f $(OBJS) bzip2.o libbz2.dll.a libbz2-1.dll bzip2-shared
++
++%.o: %.c
++	$(CC) $(CFLAGS) -c $<
